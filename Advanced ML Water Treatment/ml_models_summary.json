@@ -1,0 +1,40 @@
+{
+  "primary_stage": {
+    "coagulant_optimizer": {
+      "r2_score": -0.02454284239912119,
+      "status": "trained"
+    },
+    "mixer_optimizer": {
+      "r2_score": -0.030521937856794024,
+      "status": "trained"
+    },
+    "efficiency_predictor": {
+      "r2_score": 0.611346837055635,
+      "status": "trained"
+    }
+  },
+  "secondary_stage": {
+    "aeration_optimizer": {
+      "r2_score": -0.031650355416815934,
+      "status": "trained"
+    },
+    "efficiency_predictor": {
+      "r2_score": 0.6058816501027512,
+      "status": "trained"
+    }
+  },
+  "tertiary_stage": {
+    "chlorine_optimizer": {
+      "r2_score": -0.023700504315233628,
+      "status": "trained"
+    },
+    "uv_optimizer": {
+      "r2_score": -0.03181490501357653,
+      "status": "trained"
+    },
+    "efficiency_predictor": {
+      "r2_score": 0.004543953557272773,
+      "status": "trained"
+    }
+  }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Water Treatment System - AI Enhanced</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>🌊 Smart Water Treatment System</h1>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">System Status</span>
+                        <span class="stat-value" id="systemStatus">Operational</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Active Alerts</span>
+                        <span class="stat-value alert-count" id="alertCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">AI Confidence</span>
+                        <span class="stat-value" id="aiConfidence">95%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- AI Recommendations Section -->
+            <section class="ai-recommendations-section">
+                <div class="section-header">
+                    <h2>🤖 AI Optimization Recommendations</h2>
+                    <span class="update-time" id="lastUpdate">Updated: Just now</span>
+                </div>
+                <div class="recommendations-grid" id="recommendationsGrid">
+                    <!-- AI recommendations will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Sensor Data Input Section -->
+            <section class="data-input-section">
+                <div class="section-header">
+                    <h2>📊 Sensor Data Management</h2>
+                    <div class="header-actions">
+                        <button class="btn btn--secondary" onclick="exportSensorData()">Export JSON</button>
+                        <button class="btn btn--secondary" onclick="resetToDefault()">Reset to Default</button>
+                    </div>
+                </div>
+                
+                <div class="input-tabs">
+                    <button class="tab-btn active" onclick="switchInputTab('json')">JSON Input</button>
+                    <button class="tab-btn" onclick="switchInputTab('form')">Manual Form Input</button>
+                </div>
+
+                <!-- JSON Input Panel -->
+                <div class="input-panel" id="jsonInputPanel">
+                    <div class="json-input-container">
+                        <label class="form-label">Paste Sensor Data JSON:</label>
+                        <textarea id="jsonInput" class="json-textarea" placeholder="Paste your JSON data here..."></textarea>
+                        <div class="json-actions">
+                            <button class="btn btn--primary" onclick="loadJSONData()">Load Data</button>
+                            <button class="btn btn--secondary" onclick="showSampleJSON()">Show Sample Format</button>
+                        </div>
+                        <div id="jsonFeedback" class="feedback-message"></div>
+                    </div>
+                </div>
+
+                <!-- Form Input Panel -->
+                <div class="input-panel hidden" id="formInputPanel">
+                    <div class="stage-tabs">
+                        <button class="stage-tab active" onclick="switchStageTab(1)">Stage 1: Primary</button>
+                        <button class="stage-tab" onclick="switchStageTab(2)">Stage 2: Secondary</button>
+                        <button class="stage-tab" onclick="switchStageTab(3)">Stage 3: Tertiary</button>
+                        <button class="stage-tab" onclick="switchStageTab(4)">Stage 4: Quality</button>
+                    </div>
+                    <div id="stageFormsContainer">
+                        <!-- Stage forms will be rendered here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Machine Control Section -->
+            <section class="machine-control-section">
+                <div class="section-header">
+                    <h2>⚙️ Machine Control Panel</h2>
+                    <div class="header-actions">
+                        <button class="btn btn--secondary" onclick="applyPreset('optimal')">Optimal Preset</button>
+                        <button class="btn btn--secondary" onclick="startAllMachines()">Start All</button>
+                        <button class="btn btn--secondary" onclick="stopAllMachines()">Stop All</button>
+                    </div>
+                </div>
+                <div class="machine-groups" id="machineGroups">
+                    <!-- Machine controls will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Live Sensor Dashboard -->
+            <section class="sensor-dashboard-section">
+                <div class="section-header">
+                    <h2>📈 Live Sensor Readings</h2>
+                </div>
+                <div class="stages-container" id="stagesContainer">
+                    <!-- Sensor cards will be rendered here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Critical Alert Modal -->
+    <div id="alertModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">⚠️ Critical Alert</h3>
+                <button class="modal-close" onclick="closeAlertModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-details">
+                    <div class="alert-icon" id="alertIcon">⚠️</div>
+                    <div class="alert-info">
+                        <p class="alert-stage" id="alertStage"></p>
+                        <p class="alert-message" id="alertMessage"></p>
+                        <p class="alert-value" id="alertValue"></p>
+                        <p class="alert-action" id="alertAction"></p>
+                    </div>
+                </div>
+                <div class="alert-history">
+                    <h4>Recent Alerts</h4>
+                    <div id="alertHistoryList" class="alert-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" onclick="acknowledgeAlert()">Acknowledge</button>
+                <button class="btn btn--primary" onclick="autoFixIssue()">Auto-Fix</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

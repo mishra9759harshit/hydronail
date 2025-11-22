@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Treatment Control System</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-success-rgb: 33, 128, 141;
+            --color-error-rgb: 192, 21, 47;
+            --color-warning-rgb: 168, 75, 47;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(167, 169, 169, 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-success-rgb: 50, 184, 198;
+                --color-error-rgb: 255, 84, 89;
+                --color-warning-rgb: 230, 129, 97;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            padding: var(--space-20);
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-24);
+        }
+
+        .header h1 {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--space-8);
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: var(--space-12);
+            justify-content: center;
+            margin-bottom: var(--space-24);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-24);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-surface);
+            color: var(--color-text);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all 0.2s;
+        }
+
+        .btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .btn:hover:not(.active) {
+            background: var(--color-secondary-hover);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-20);
+            margin-bottom: var(--space-24);
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card h2 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-12);
+        }
+
+        .sensor-item {
+            padding: var(--space-12);
+            background: var(--color-secondary);
+            border-radius: var(--radius-base);
+        }
+
+        .sensor-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .sensor-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: rgba(var(--color-success-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid rgba(var(--color-success-rgb), 0.25);
+        }
+
+        .status-offline {
+            background: rgba(var(--color-error-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid rgba(var(--color-error-rgb), 0.25);
+        }
+
+        .status-warning {
+            background: rgba(var(--color-warning-rgb), 0.15);
+            color: var(--color-warning);
+            border: 1px solid rgba(var(--color-warning-rgb), 0.25);
+        }
+
+        .machine-status {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .machine-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-12);
+            background: var(--color-secondary);
+            border-radius: var(--radius-base);
+        }
+
+        .control-section {
+            margin-top: var(--space-16);
+        }
+
+        .control-group {
+            margin-bottom: var(--space-16);
+        }
+
+        .control-group label {
+            display: block;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--color-secondary);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            display: inline-block;
+            margin-left: var(--space-8);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .guidance {
+            background: var(--color-secondary);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            margin-top: var(--space-16);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .guidance h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-8);
+            color: var(--color-primary);
+        }
+
+        .guidance ol {
+            margin-left: var(--space-20);
+            font-size: var(--font-size-sm);
+        }
+
+        .guidance li {
+            margin-bottom: var(--space-8);
+        }
+
+        .inspection-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--space-12);
+        }
+
+        .inspection-table th,
+        .inspection-table td {
+            padding: var(--space-12);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .inspection-table th {
+            background: var(--color-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .inspection-table td {
+            font-size: var(--font-size-sm);
+        }
+
+        .file-upload {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        input[type="file"] {
+            flex: 1;
+            padding: var(--space-8);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .alert {
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            margin-top: var(--space-12);
+            font-size: var(--font-size-sm);
+        }
+
+        .alert-info {
+            background: rgba(var(--color-success-rgb), 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(var(--color-success-rgb), 0.2);
+        }
+
+        .stage-tabs {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-20);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .stage-tab {
+            padding: var(--space-12) var(--space-20);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+
+        .stage-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .stage-content {
+            display: none;
+        }
+
+        .stage-content.active {
+            display: block;
+        }
+
+        .metric-large {
+            text-align: center;
+            padding: var(--space-20);
+            background: var(--color-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-16);
+        }
+
+        .metric-large .label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+        }
+
+        .metric-large .value {
+            font-size: var(--font-size-3xl);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💧 Water Treatment Control System</h1>
+        <p style="color: var(--color-text-secondary); margin-top: 8px;">Real-time Monitoring &amp; Control Dashboard</p>
+    </div>
+
+    <div class="mode-toggle">
+        <button class="btn active" onclick="setMode('manual')">Manual Mode</button>
+        <button class="btn" onclick="setMode('auto')">Automatic Mode</button>
+    </div>
+
+    <div class="stage-tabs">
+        <button class="stage-tab active" onclick="switchStage('treatment')">Treatment Stage</button>
+        <button class="stage-tab" onclick="switchStage('inspection')">Inspection Stage</button>
+    </div>
+
+    <!-- Treatment Stage -->
+    <div id="treatment-stage" class="stage-content active">
+        <div class="dashboard">
+            <!-- Sensor Readings -->
+            <div class="card">
+                <h2>📊 Sensor Readings</h2>
+                <div class="file-upload">
+                    <input type="file" id="jsonFile" accept=".json">
+                    <button class="btn btn-primary" onclick="loadSensorData()">Load Data</button>
+                </div>
+                <div class="sensor-grid">
+                    <div class="sensor-item">
+                        <div class="sensor-label">pH Level</div>
+                        <div class="sensor-value" id="ph-value">7.2</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Temperature</div>
+                        <div class="sensor-value" id="temp-value">25°C</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">DO (mg/L)</div>
+                        <div class="sensor-value" id="do-value">6.5</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">TDS (ppm)</div>
+                        <div class="sensor-value" id="tds-value">320</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Turbidity (NTU)</div>
+                        <div class="sensor-value" id="turbidity-value">2.1</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Chlorine (mg/L)</div>
+                        <div class="sensor-value" id="chlorine-value">0.5</div>
+                    </div>
+                </div>
+                <div class="alert alert-info" style="margin-top: 12px;">
+                    <strong>MQTT Ready:</strong> Upload JSON sensor data or connect to MQTT broker for real-time updates
+                </div>
+            </div>
+
+            <!-- Machine Status -->
+            <div class="card">
+                <h2>⚙️ Machine Status</h2>
+                <div class="machine-status">
+                    <div class="machine-item">
+                        <span>Dosing Pump 1</span>
+                        <span class="status-badge status-online" id="pump1-status">Online</span>
+                    </div>
+                    <div class="machine-item">
+                        <span>Dosing Pump 2</span>
+                        <span class="status-badge status-online" id="pump2-status">Online</span>
+                    </div>
+                    <div class="machine-item">
+                        <span>Mixing Motor</span>
+                        <span class="status-badge status-online" id="motor-status">Online</span>
+                    </div>
+                    <div class="machine-item">
+                        <span>Flow Sensor</span>
+                        <span class="status-badge status-online" id="flow-status">Online</span>
+                    </div>
+                    <div class="machine-item">
+                        <span>Controller PLC</span>
+                        <span class="status-badge status-online" id="plc-status">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chemical Control -->
+            <div class="card">
+                <h2>🧪 Chemical Dosing Control</h2>
+                <div id="manual-controls" class="control-section">
+                    <div class="control-group">
+                        <label>
+                            Chlorine Dosage (mg/L)
+                            <span class="value-display" id="chlorine-dose-display">1.0</span>
+                        </label>
+                        <input type="range" id="chlorine-dose" min="0" max="5" step="0.1" value="1.0" oninput="updateDosage('chlorine', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <label>
+                            Coagulant (Alum) (mg/L)
+                            <span class="value-display" id="alum-dose-display">15.0</span>
+                        </label>
+                        <input type="range" id="alum-dose" min="0" max="50" step="1" value="15" oninput="updateDosage('alum', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <label>
+                            pH Adjuster (mg/L)
+                            <span class="value-display" id="ph-dose-display">5.0</span>
+                        </label>
+                        <input type="range" id="ph-dose" min="0" max="20" step="0.5" value="5.0" oninput="updateDosage('ph', this.value)">
+                    </div>
+                </div>
+
+                <div id="auto-controls" class="control-section" style="display: none;">
+                    <div class="alert alert-info">
+                        <strong>🤖 Automatic Mode Active</strong><br>
+                        System is automatically adjusting chemical dosages based on sensor readings and optimal treatment parameters.
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <div class="sensor-item" style="margin-bottom: 12px;">
+                            <div class="sensor-label">Auto Chlorine Dose</div>
+                            <div class="sensor-value" id="auto-chlorine">1.2 mg/L</div>
+                        </div>
+                        <div class="sensor-item" style="margin-bottom: 12px;">
+                            <div class="sensor-label">Auto Alum Dose</div>
+                            <div class="sensor-value" id="auto-alum">18.5 mg/L</div>
+                        </div>
+                        <div class="sensor-item">
+                            <div class="sensor-label">Auto pH Adjuster</div>
+                            <div class="sensor-value" id="auto-ph">4.2 mg/L</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operator Guidance -->
+            <div class="card" id="guidance-card">
+                <h2>📋 Operator Guidance</h2>
+                <div class="guidance">
+                    <h3>Current Action Steps:</h3>
+                    <ol id="guidance-steps">
+                        <li>Monitor pH levels - Current: 7.2 (Optimal: 6.5-7.5)</li>
+                        <li>Check chlorine residual - Adjust dosing to maintain 0.5-2.0 mg/L</li>
+                        <li>Verify turbidity levels before proceeding to next stage</li>
+                        <li>Ensure all dosing pumps are operating normally</li>
+                        <li>Record readings every 15 minutes in treatment log</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inspection Stage -->
+    <div id="inspection-stage" class="stage-content">
+        <div class="dashboard">
+            <!-- Water Quality Assessment -->
+            <div class="card">
+                <h2>🔬 Cleaned Water Quality</h2>
+                <div class="sensor-grid">
+                    <div class="sensor-item">
+                        <div class="sensor-label">Final pH</div>
+                        <div class="sensor-value" id="final-ph">7.0</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Final DO</div>
+                        <div class="sensor-value" id="final-do">7.2 mg/L</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Final Turbidity</div>
+                        <div class="sensor-value" id="final-turbidity">0.8 NTU</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Final TDS</div>
+                        <div class="sensor-value" id="final-tds">285 ppm</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Chlorine Residual</div>
+                        <div class="sensor-value" id="final-chlorine">1.2 mg/L</div>
+                    </div>
+                    <div class="sensor-item">
+                        <div class="sensor-label">Quality Status</div>
+                        <div class="sensor-value">
+                            <span class="status-badge status-online">Excellent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Analysis -->
+            <div class="card">
+                <h2>♻️ Material Recovery &amp; Reuse</h2>
+                <div class="metric-large">
+                    <div class="label">Total Water Processed</div>
+                    <div class="value" id="total-water">1,250 L</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="metric-large">
+                        <div class="label">Water Reused</div>
+                        <div class="value" id="water-reused" style="color: var(--color-success);">1,125 L</div>
+                    </div>
+                    <div class="metric-large">
+                        <div class="label">Waste Removed</div>
+                        <div class="value" id="waste-removed" style="color: var(--color-warning);">125 L</div>
+                    </div>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="sensor-item" style="margin-bottom: 12px;">
+                        <div class="sensor-label">Recovery Efficiency</div>
+                        <div class="sensor-value" id="efficiency">90.0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Removed Materials -->
+            <div class="card">
+                <h2>🗑️ Removed Materials Analysis</h2>
+                <table class="inspection-table">
+                    <thead>
+                        <tr>
+                            <th>Material Type</th>
+                            <th>Quantity</th>
+                            <th>Quality</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materials-table">
+                        <tr>
+                            <td>Suspended Solids</td>
+                            <td>45 kg</td>
+                            <td><span class="status-badge status-warning">Moderate</span></td>
+                        </tr>
+                        <tr>
+                            <td>Sludge</td>
+                            <td>32 kg</td>
+                            <td><span class="status-badge status-warning">Moderate</span></td>
+                        </tr>
+                        <tr>
+                            <td>Chemical Precipitate</td>
+                            <td>18 kg</td>
+                            <td><span class="status-badge status-online">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td>Organic Matter</td>
+                            <td>12 kg</td>
+                            <td><span class="status-badge status-warning">Moderate</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inspection Guidance -->
+            <div class="card">
+                <h2>📋 Inspection Checklist</h2>
+                <div class="guidance">
+                    <h3>Quality Verification Steps:</h3>
+                    <ol>
+                        <li>✓ pH level within acceptable range (6.5-8.5)</li>
+                        <li>✓ Dissolved oxygen above 5.0 mg/L</li>
+                        <li>✓ Turbidity below 1.0 NTU for reuse</li>
+                        <li>✓ Chlorine residual maintained at 0.5-2.0 mg/L</li>
+                        <li>✓ TDS below 500 ppm for agricultural reuse</li>
+                        <li>⚠ Verify sludge disposal according to regulations</li>
+                        <li>⚠ Document material recovery percentages</li>
+                    </ol>
+                </div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="generateReport()">
+                    Generate Inspection Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'manual';
+        let sensorData = {
+            pH: 7.2,
+            temperature: 25,
+            DO: 6.5,
+            TDS: 320,
+            turbidity: 2.1,
+            chlorine: 0.5
+        };
+
+        function setMode(mode) {
+            currentMode = mode;
+            const buttons = document.querySelectorAll('.mode-toggle .btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (mode === 'manual') {
+                document.getElementById('manual-controls').style.display = 'block';
+                document.getElementById('auto-controls').style.display = 'none';
+                document.getElementById('guidance-card').style.display = 'block';
+                updateGuidance();
+            } else {
+                document.getElementById('manual-controls').style.display = 'none';
+                document.getElementById('auto-controls').style.display = 'block';
+                document.getElementById('guidance-card').style.display = 'none';
+                runAutoControl();
+            }
+        }
+
+        function switchStage(stage) {
+            const tabs = document.querySelectorAll('.stage-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.stage-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (stage === 'treatment') {
+                document.getElementById('treatment-stage').classList.add('active');
+            } else {
+                document.getElementById('inspection-stage').classList.add('active');
+                calculateInspectionData();
+            }
+        }
+
+        function updateDosage(chemical, value) {
+            document.getElementById(`${chemical}-dose-display`).textContent = value;
+            
+            // Update guidance based on changes
+            if (currentMode === 'manual') {
+                updateGuidance();
+            }
+        }
+
+        function updateGuidance() {
+            const steps = [];
+            const ph = sensorData.pH;
+            const chlorine = parseFloat(document.getElementById('chlorine-dose').value);
+            const turbidity = sensorData.turbidity;
+
+            if (ph < 6.5 || ph > 7.5) {
+                steps.push(`⚠️ pH adjustment needed - Current: ${ph} (Target: 6.5-7.5). Increase pH adjuster dosage.`);
+            } else {
+                steps.push(`✓ pH level optimal - Current: ${ph}`);
+            }
+
+            if (chlorine < 0.5) {
+                steps.push(`⚠️ Increase chlorine dosage - Current: ${chlorine} mg/L (Target: 0.5-2.0 mg/L)`);
+            } else if (chlorine > 2.0) {
+                steps.push(`⚠️ Reduce chlorine dosage - Current: ${chlorine} mg/L (Target: 0.5-2.0 mg/L)`);
+            } else {
+                steps.push(`✓ Chlorine levels optimal - Current: ${chlorine} mg/L`);
+            }
+
+            if (turbidity > 5.0) {
+                steps.push(`⚠️ High turbidity detected - Increase coagulant dosage to ${Math.ceil(turbidity * 3)} mg/L`);
+            } else {
+                steps.push(`✓ Turbidity within acceptable range - Current: ${turbidity} NTU`);
+            }
+
+            steps.push('Monitor all parameters continuously and record readings every 15 minutes');
+            steps.push('Verify all dosing pumps are functioning properly');
+
+            const guidanceList = document.getElementById('guidance-steps');
+            guidanceList.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
+        }
+
+        function runAutoControl() {
+            // Automatic control algorithm
+            const ph = sensorData.pH;
+            const turbidity = sensorData.turbidity;
+            const chlorine = sensorData.chlorine;
+
+            // Calculate optimal dosages
+            let autoChlorine = 1.0;
+            if (chlorine < 0.5) {
+                autoChlorine = 1.5;
+            } else if (chlorine > 2.0) {
+                autoChlorine = 0.8;
+            } else {
+                autoChlorine = 1.0 + (1.0 - chlorine) * 0.5;
+            }
+
+            let autoAlum = 15.0;
+            if (turbidity > 5.0) {
+                autoAlum = turbidity * 3.5;
+            } else if (turbidity > 2.0) {
+                autoAlum = turbidity * 2.0;
+            }
+
+            let autoPh = 5.0;
+            if (ph < 6.5) {
+                autoPh = (6.5 - ph) * 10;
+            } else if (ph > 7.5) {
+                autoPh = (ph - 7.5) * 8;
+            }
+
+            document.getElementById('auto-chlorine').textContent = autoChlorine.toFixed(1) + ' mg/L';
+            document.getElementById('auto-alum').textContent = autoAlum.toFixed(1) + ' mg/L';
+            document.getElementById('auto-ph').textContent = autoPh.toFixed(1) + ' mg/L';
+        }
+
+        function loadSensorData() {
+            const fileInput = document.getElementById('jsonFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a JSON file first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Update sensor readings from JSON
+                    if (data.pH !== undefined) {
+                        sensorData.pH = data.pH;
+                        document.getElementById('ph-value').textContent = data.pH;
+                    }
+                    if (data.temperature !== undefined) {
+                        sensorData.temperature = data.temperature;
+                        document.getElementById('temp-value').textContent = data.temperature + '°C';
+                    }
+                    if (data.DO !== undefined) {
+                        sensorData.DO = data.DO;
+                        document.getElementById('do-value').textContent = data.DO;
+                    }
+                    if (data.TDS !== undefined) {
+                        sensorData.TDS = data.TDS;
+                        document.getElementById('tds-value').textContent = data.TDS;
+                    }
+                    if (data.turbidity !== undefined) {
+                        sensorData.turbidity = data.turbidity;
+                        document.getElementById('turbidity-value').textContent = data.turbidity;
+                    }
+                    if (data.chlorine !== undefined) {
+                        sensorData.chlorine = data.chlorine;
+                        document.getElementById('chlorine-value').textContent = data.chlorine;
+                    }
+
+                    // Update guidance or auto control based on mode
+                    if (currentMode === 'manual') {
+                        updateGuidance();
+                    } else {
+                        runAutoControl();
+                    }
+
+                    alert('Sensor data loaded successfully!');
+                } catch (error) {
+                    alert('Error parsing JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function calculateInspectionData() {
+            // Simulate inspection calculations
+            const treatmentEfficiency = 0.90;
+            const totalWater = 1250;
+            const waterReused = Math.round(totalWater * treatmentEfficiency);
+            const wasteRemoved = totalWater - waterReused;
+
+            document.getElementById('total-water').textContent = totalWater.toLocaleString() + ' L';
+            document.getElementById('water-reused').textContent = waterReused.toLocaleString() + ' L';
+            document.getElementById('waste-removed').textContent = wasteRemoved.toLocaleString() + ' L';
+            document.getElementById('efficiency').textContent = (treatmentEfficiency * 100).toFixed(1) + '%';
+
+            // Calculate final water quality (improved values)
+            document.getElementById('final-ph').textContent = (sensorData.pH * 0.97).toFixed(1);
+            document.getElementById('final-do').textContent = (sensorData.DO * 1.1).toFixed(1) + ' mg/L';
+            document.getElementById('final-turbidity').textContent = (sensorData.turbidity * 0.38).toFixed(1) + ' NTU';
+            document.getElementById('final-tds').textContent = Math.round(sensorData.TDS * 0.89) + ' ppm';
+            document.getElementById('final-chlorine').textContent = (sensorData.chlorine * 2.4).toFixed(1) + ' mg/L';
+        }
+
+        function generateReport() {
+            const reportData = {
+                timestamp: new Date().toISOString(),
+                stage: 'Inspection',
+                waterQuality: {
+                    pH: document.getElementById('final-ph').textContent,
+                    DO: document.getElementById('final-do').textContent,
+                    turbidity: document.getElementById('final-turbidity').textContent,
+                    TDS: document.getElementById('final-tds').textContent,
+                    chlorine: document.getElementById('final-chlorine').textContent
+                },
+                recovery: {
+                    total: document.getElementById('total-water').textContent,
+                    reused: document.getElementById('water-reused').textContent,
+                    waste: document.getElementById('waste-removed').textContent,
+                    efficiency: document.getElementById('efficiency').textContent
+                }
+            };
+
+            const reportJson = JSON.stringify(reportData, null, 2);
+            const blob = new Blob([reportJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `inspection-report-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            alert('Inspection report generated and downloaded!');
+        }
+
+        // Simulate real-time updates every 5 seconds
+        setInterval(() => {
+            if (currentMode === 'auto') {
+                // Add small random variations to simulate real sensor data
+                sensorData.pH += (Math.random() - 0.5) * 0.1;
+                sensorData.turbidity += (Math.random() - 0.5) * 0.2;
+                sensorData.chlorine += (Math.random() - 0.5) * 0.05;
+
+                document.getElementById('ph-value').textContent = sensorData.pH.toFixed(1);
+                document.getElementById('turbidity-value').textContent = sensorData.turbidity.toFixed(1);
+                document.getElementById('chlorine-value').textContent = sensorData.chlorine.toFixed(2);
+
+                runAutoControl();
+            }
+        }, 5000);
+
+        // Initialize guidance on load
+        updateGuidance();
+    </script>
+</body>
+</html>
+
